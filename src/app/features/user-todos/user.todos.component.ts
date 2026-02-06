@@ -1,4 +1,4 @@
-import { DestroyRef, Component, OnInit, inject, signal } from '@angular/core';
+import { DestroyRef, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -41,6 +41,22 @@ export class UserTodosComponent implements OnInit {
   readonly todosStatus$ = this.todosStore.status$;
   readonly todosError$ = this.todosStore.error$;
   readonly todos = signal<Todo[]>([]);
+
+  readonly todoFilter = signal<'all' | 'active' | 'completed'>('all');
+  readonly visibleTodos = computed(() => {
+    const filterValue = this.todoFilter();
+    const todos = this.todos();
+
+    switch (filterValue) {
+      case 'active':
+        return todos.filter((t) => !t.completed);
+      case 'completed':
+        return todos.filter((t) => t.completed);
+      case 'all':
+      default:
+        return todos;
+    }
+  });
 
   readonly form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
