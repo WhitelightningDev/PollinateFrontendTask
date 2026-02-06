@@ -1,59 +1,48 @@
-# PollinateFrontendTask
+# Pollinate Frontend Task
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.3.
+Small Angular app that lists users and lets you view a user’s to-dos.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **Users list**: Fetches users from JSONPlaceholder and renders a responsive Tailwind UI.
+- **User details + to-dos**: Route-driven page that loads a single user and filters to-dos for that user.
+- **Todos store**: Centralized RxJS store that loads all to-dos once and exposes selectors like `todosForUser$()`.
 
-```bash
-ng serve
-```
+## Tech Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Angular (generated with Angular CLI `21.1.3`)
+- RxJS
+- Tailwind CSS (via PostCSS) + utility classes in templates
+- Unit tests: `ng test` (Vitest)
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Getting Started
 
 ```bash
-ng generate --help
+npm install
+npm start
 ```
 
-## Building
+Open `http://localhost:4200/`.
 
-To build the project run:
+## Scripts
 
-```bash
-ng build
-```
+- `npm start` — run dev server
+- `npm run build` — production build to `dist/`
+- `npm test -- --watch=false` — run unit tests once
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Routes
 
-## Running unit tests
+- `/users` — users list
+- `/users/:id` — user to-dos page
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Project Layout
 
-```bash
-ng test
-```
+- `src/app/core/services/` — API services (`UsersService`, `TodosService`)
+- `src/app/core/state/` — store (`TodosStore`)
+- `src/app/features/users/` — users list component + spec
+- `src/app/features/user-todos/` — user to-dos page
 
-## Running end-to-end tests
+## Notes
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- APIs are backed by `https://jsonplaceholder.typicode.com` (demo data; changes aren’t persisted).
+- This project is **zoneless** (no `zone.js` dependency). Components that update UI from async work use Angular **signals** for reliable rendering.
