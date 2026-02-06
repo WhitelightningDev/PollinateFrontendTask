@@ -55,7 +55,9 @@ export class TodosStore {
   );
 
   loadTodos(): void {
-    if (this.stateSubject.value.status === 'loading') return;
+    const { status, fetched } = this.stateSubject.value;
+    if (status === 'loading') return;
+    if (status === 'loaded' && fetched.length > 0) return;
 
     this.setState({ status: 'loading', error: null });
     this.todosService
@@ -66,6 +68,10 @@ export class TodosStore {
         error: (error: unknown) =>
           this.setState({ status: 'error', error: toErrorMessage(error) }),
       });
+  }
+
+  todosForUser$(userId: number): Observable<Todo[]> {
+    return this.todos$.pipe(map((todos) => todos.filter((todo) => todo.userId === userId)));
   }
 
   addTodo(input: NewTodoInput): void {
