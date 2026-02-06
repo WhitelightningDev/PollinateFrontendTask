@@ -8,9 +8,14 @@
   </a>
 
   <header class="space-y-1">
-    <h2 class="text-xl font-semibold text-slate-900">
+    <h2 class="flex flex-wrap items-center gap-2 text-xl font-semibold text-slate-900">
       <ng-container *ngIf="user() as u; else loadingUser">
         {{ u.name }}
+        <span
+          class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+        >
+          User #{{ u.id }}
+        </span>
       </ng-container>
       <ng-template #loadingUser>
         <span *ngIf="userLoading(); else unknownUser" class="text-slate-600">Loading user…</span>
@@ -29,7 +34,8 @@
     class="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800"
     role="alert"
   >
-    {{ err }}
+    <p class="font-medium">Oops! Something went wrong.</p>
+    <p class="mt-1 text-sm text-red-800">{{ err }}</p>
   </div>
 
   <div class="grid gap-6 lg:grid-cols-3">
@@ -73,13 +79,69 @@
     </form>
 
     <div class="space-y-3 lg:col-span-2">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h3 class="text-base font-semibold text-slate-900">To-dos</h3>
+
+        <div
+          class="inline-flex w-full flex-wrap items-center gap-2 rounded-md border border-slate-200 bg-white p-1 text-sm sm:w-auto"
+          role="group"
+          aria-label="To-do filter"
+        >
+          <button
+            type="button"
+            class="rounded px-2 py-1 transition"
+            [class.bg-slate-900]="todoFilter() === 'all'"
+            [class.text-white]="todoFilter() === 'all'"
+            [class.text-slate-700]="todoFilter() !== 'all'"
+            (click)="todoFilter.set('all')"
+          >
+            All
+          </button>
+          <button
+            type="button"
+            class="rounded px-2 py-1 transition"
+            [class.bg-slate-900]="todoFilter() === 'active'"
+            [class.text-white]="todoFilter() === 'active'"
+            [class.text-slate-700]="todoFilter() !== 'active'"
+            (click)="todoFilter.set('active')"
+          >
+            Active
+          </button>
+          <button
+            type="button"
+            class="rounded px-2 py-1 transition"
+            [class.bg-slate-900]="todoFilter() === 'completed'"
+            [class.text-white]="todoFilter() === 'completed'"
+            [class.text-slate-700]="todoFilter() !== 'completed'"
+            (click)="todoFilter.set('completed')"
+          >
+            Completed
+          </button>
+        </div>
+      </div>
+
       <div
         *ngIf="(todosStatus$ | async) === 'loading'"
-        class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700"
         role="status"
         aria-live="polite"
       >
-        Loading to-dos…
+        <span class="sr-only">Loading to-dos…</span>
+
+        <ul class="space-y-2" aria-hidden="true">
+          <li
+            *ngFor="let _ of [0, 1, 2, 3, 4]"
+            class="animate-pulse rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+          >
+            <div class="flex items-start gap-3">
+              <div class="mt-1 h-4 w-4 rounded bg-slate-200"></div>
+              <div class="min-w-0 flex-1 space-y-2">
+                <div class="h-3 w-4/5 rounded bg-slate-200"></div>
+                <div class="h-3 w-2/3 rounded bg-slate-200"></div>
+                <div class="h-3 w-16 rounded bg-slate-200"></div>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
 
       <div
@@ -87,19 +149,20 @@
         class="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800"
         role="alert"
       >
-        {{ todoErr }}
+        <p class="font-medium">Oops! Something went wrong.</p>
+        <p class="mt-1 text-sm text-red-800">{{ todoErr }}</p>
       </div>
 
       <div
-        *ngIf="(todosStatus$ | async) === 'loaded' && todos().length === 0"
+        *ngIf="(todosStatus$ | async) === 'loaded' && visibleTodos().length === 0"
         class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700"
       >
         No to-dos for this user yet.
       </div>
 
-      <ul *ngIf="todos().length > 0" class="space-y-2">
+      <ul *ngIf="visibleTodos().length > 0" class="space-y-2">
         <li
-          *ngFor="let todo of todos(); trackBy: trackByTodoId"
+          *ngFor="let todo of visibleTodos(); trackBy: trackByTodoId"
           class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
         >
           <div class="flex items-start gap-3">
