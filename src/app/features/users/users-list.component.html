@@ -1,0 +1,86 @@
+<section class="space-y-4" aria-labelledby="users-title">
+  <div class="flex items-center justify-between gap-4">
+    <div>
+      <h2 id="users-title" class="text-lg font-semibold text-slate-900">Users</h2>
+      <p class="text-sm text-slate-600">Select a user to view their to-dos.</p>
+    </div>
+
+    <button
+      type="button"
+      class="inline-flex items-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+      (click)="fetchUsers()"
+      [disabled]="isLoading()"
+    >
+      Refresh
+    </button>
+  </div>
+
+  <div
+    *ngIf="isLoading()"
+    class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700"
+    role="status"
+    aria-live="polite"
+  >
+    Loading users…
+  </div>
+
+  <div
+    *ngIf="error() as err"
+    class="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+    role="alert"
+  >
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <p class="min-w-0 break-words">{{ err }}</p>
+      <button
+        type="button"
+        class="inline-flex items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+        (click)="fetchUsers()"
+      >
+        Try again
+      </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="!isLoading() && !error() && users().length === 0"
+    class="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-700"
+  >
+    No users found.
+  </div>
+
+  <ul
+    *ngIf="!isLoading() && !error() && users().length > 0"
+    class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+  >
+    <li
+      *ngFor="let user of users()"
+      class="group rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow"
+    >
+      <div class="min-w-0 space-y-1">
+        <div class="truncate text-base font-semibold text-slate-900">{{ user.name }}</div>
+        <div class="truncate text-sm text-slate-600">@{{ user.username }}</div>
+
+        <a class="truncate text-sm text-blue-700 hover:underline" [href]="'mailto:' + user.email">
+          {{ user.email }}
+        </a>
+      </div>
+
+      <div class="mt-4 flex items-center justify-between gap-3">
+        <span
+          *ngIf="user.role"
+          class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+        >
+          {{ user.role }}
+        </span>
+
+        <a
+          class="inline-flex items-center gap-1 text-sm font-medium text-slate-900 hover:underline"
+          [routerLink]="['/users', user.id]"
+        >
+          View to-dos
+          <span aria-hidden="true" class="transition group-hover:translate-x-0.5">→</span>
+        </a>
+      </div>
+    </li>
+  </ul>
+</section>
