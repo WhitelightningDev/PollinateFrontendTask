@@ -6,12 +6,11 @@ import { TodosService } from '../services/todos.service';
 
 describe('TodosStore', () => {
   let store: TodosStore;
-  let todosService: Pick<TodosService, 'getTodos' | 'createTodo'>;
+  let todosService: Pick<TodosService, 'getTodos'>;
 
   beforeEach(() => {
     todosService = {
       getTodos: () => of([]),
-      createTodo: (input) => of({ ...input, id: 1 }),
     };
 
     TestBed.configureTestingModule({
@@ -21,7 +20,6 @@ describe('TodosStore', () => {
           provide: TodosService,
           useValue: {
             getTodos: todosService.getTodos,
-            createTodo: todosService.createTodo,
           },
         },
       ],

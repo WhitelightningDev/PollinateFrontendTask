@@ -75,18 +75,12 @@ export class TodosStore {
   }
 
   addTodo(input: NewTodoInput): void {
-    this.setState({ error: null });
-    this.todosService
-      .createTodo(input)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (newTodo) => {
-          const { added } = this.stateSubject.value;
-          this.setState({ added: [...added, newTodo] });
-        },
-        error: (error: unknown) =>
-          this.setState({ status: 'error', error: toErrorMessage(error) }),
-      });
+    // Task requirement: adding a to-do only needs to update local state (no persistence required).
+    // Generate a new ID client-side so the UI can render the new item immediately.
+    const newTodo: Todo = { ...input, id: this.getNextTodoId() };
+
+    const { added } = this.stateSubject.value;
+    this.setState({ error: null, added: [...added, newTodo] });
   }
 
   updateTodo(id: number, updates: Partial<Todo>): void {
@@ -152,6 +146,12 @@ export class TodosStore {
     if (fromAdded) return fromAdded;
 
     return state.fetched.find((t) => t.id === id);
+  }
+
+  private getNextTodoId(): number {
+    const { fetched, added } = this.stateSubject.value;
+    const maxId = [...fetched, ...added].reduce((max, todo) => Math.max(max, todo.id), 0);
+    return maxId + 1;
   }
 }
 

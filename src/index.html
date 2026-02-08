@@ -2,12 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>PollinateFrontendTask</title>
+  <title>Pollinate Frontend Task</title>
+
+  <!--
+    Required for Angular Router to generate correct URLs.
+    Update this if the app is deployed under a sub-path (e.g. "/my-app/").
+  -->
   <base href="/">
+
+  <!-- Basic SEO + preview metadata -->
+  <meta name="description" content="Small Angular app that lists users and lets you view a user’s to-dos.">
+
+  <!-- Mobile + platform defaults -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- Icons -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
+  <!-- App mount point (Angular bootstraps into this element) -->
   <app-root></app-root>
+
+  <!-- Optional: shown if JavaScript is disabled -->
+  <noscript>This app requires JavaScript to run.</noscript>
 </body>
 </html>

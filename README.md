@@ -46,3 +46,9 @@ Open `http://localhost:4200/`.
 
 - APIs are backed by `https://jsonplaceholder.typicode.com` (demo data; changes aren’t persisted).
 - This project is **zoneless** (no `zone.js` dependency). Components that update UI from async work use Angular **signals** for reliable rendering.
+
+## What I’d Improve With More Time
+
+- Add a few more Playwright e2e flows (error states, empty states, and accessibility smoke checks).
+- Add UI for toggling a to-do’s completed state (and reflecting that in the store).
+- Add more robust error recovery (e.g. retry for to-dos fetch) and richer loading skeletons for the user detail page.
