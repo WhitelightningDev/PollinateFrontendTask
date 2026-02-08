@@ -44,5 +44,5 @@ Open `http://localhost:4200/`.
 
 ## Notes
 
-- APIs are backed by `https://jsonplaceholder.typicode.com` (demo data; changes aren’t persisted).
+- APIs are backed by `https://jsonplaceholder.typicode.com`.
 - This project is **zoneless** (no `zone.js` dependency). Components that update UI from async work use Angular **signals** for reliable rendering.
