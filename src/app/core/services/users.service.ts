@@ -11,10 +11,12 @@ export class UsersService {
 
   constructor(private http: HttpClient) {}
 
+  // This is a function the gets all the users from the API and returns an Observable of an array of User objects.
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
   }
 
+  // This is a function that gets a single user by its ID from the API and returns an Observable of a User object.
   getUserById(id: number): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
